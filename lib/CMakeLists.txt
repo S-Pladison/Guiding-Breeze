@@ -1,3 +1,7 @@
+# -[fmt]--------------------------------------------------------------------
+
+add_subdirectory(fmt)
+
 # -[ImGui]------------------------------------------------------------------
 
 add_library(imgui STATIC
@@ -30,6 +34,7 @@ target_link_libraries(imgui
 )
 
 target_link_libraries(${PROJECT_NAME}
+    fmt
     SDL2::SDL2
     SDL2::SDL2main
     imgui
