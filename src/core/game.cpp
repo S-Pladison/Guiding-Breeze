@@ -1,6 +1,7 @@
 #include "game.hpp"
 
 #include <iostream>
+#include <ostream>
 
 #include "SDL.h"
 
@@ -21,22 +22,27 @@ void Game::Start() {
     return;
   }
 
-  std::cout << "Game is starting..." << std::endl;
-
-  // Инициализация SDL
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0) {
-    printf("Ошибка: %s\n", SDL_GetError());
+    std::cout << "Не удалось инициализировать SDL..." << '\n';
     return;
   }
 
-  // Создание окна SDL
-  window_ = SDL_CreateWindow("ImGui + SDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_RESIZABLE);
-  renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+  if (window_ = SDL_CreateWindow("ImGui + SDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_RESIZABLE); !window_) {
+    std::cout << "Не удалось инициализировать окно..." << '\n';
+    return;
+  }
+
+  if (renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED); !renderer_) {
+    std::cout << "Не удалось инициализировать средство визуализации..." << '\n';
+    return;
+  }
 
   // Инициализация ImGui
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO();
+
+  // Временно убираем сохранения данных ImGui
   io.IniFilename = nullptr;
 
   // Исправление кириллицы
@@ -45,6 +51,8 @@ void Game::Start() {
   // Инициализация ImGui для SDL2 и SDL_Renderer
   ImGui_ImplSDL2_InitForSDLRenderer(window_, renderer_);
   ImGui_ImplSDLRenderer2_Init(renderer_);
+
+  std::cout << "Инициализация игры прошла успешно!" << '\n';
 
   was_started_ = true;
 }
@@ -88,6 +96,8 @@ void Game::Exit() {
     return;
   }
 
+  std::cout << "Прекращение работы игры..." << '\n';
+
   // Очистка
   ImGui_ImplSDLRenderer2_Shutdown();
   ImGui_ImplSDL2_Shutdown();
@@ -96,8 +106,6 @@ void Game::Exit() {
   SDL_DestroyRenderer(renderer_);
   SDL_DestroyWindow(window_);
   SDL_Quit();
-
-  std::cout << "Game is finished..." << std::endl;
 
   was_started_ = false;
 }

@@ -10,5 +10,5 @@ int main(int, char**) {
 
   game.Exit();
 
-  return 0;
+  return EXIT_SUCCESS;
 }
