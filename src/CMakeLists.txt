@@ -7,3 +7,6 @@ endif()
 
 # Добавляем исходники проекта.
 target_sources(${PROJECT_NAME} PRIVATE ${SRC_FILES})
+
+# Добавляем директорию с источниками в качестве публичного включения для всех целей этого проекта.
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
