@@ -13,6 +13,7 @@ enum class Level {
   kFatal
 };
 
+void Log(Level level, const std::string& message);
 void Debug(const std::string& message);
 void Info(const std::string& message);
 void Warn(const std::string& message);

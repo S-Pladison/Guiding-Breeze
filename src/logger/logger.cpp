@@ -28,19 +28,19 @@ namespace {
   const std::string& LevelAsColoredString(Level level) {
     switch (level) {
       case Level::kDebug:
-        static const std::string kDebug = STR_COLORED_RGB(30, 200, 145, "[DEBUG]");
+        static const std::string kDebug   = STR_COLORED_RGB(30 , 200, 145, "[DEBUG]"  );
         return kDebug;
       case Level::kInfo:
-        static const std::string kInfo = STR_COLORED_RGB(130, 130, 130, "[INFO]");
+        static const std::string kInfo    = STR_COLORED_RGB(130, 130, 130, "[INFO]"   );
         return kInfo;
       case Level::kWarning:
-        static const std::string kWarning = STR_COLORED_RGB(200, 145, 30, "[WARNING]");
+        static const std::string kWarning = STR_COLORED_RGB(200, 145,  30, "[WARNING]");
         return kWarning;
       case Level::kError:
-        static const std::string kError = STR_COLORED_RGB(200, 30, 70, "[ERROR]");
+        static const std::string kError   = STR_COLORED_RGB(200,  30,  70, "[ERROR]"  );
         return kError;
       case Level::kFatal:
-        static const std::string kFatal = STR_COLORED_RGB(200, 30, 70, "[FATAL]");
+        static const std::string kFatal   = STR_COLORED_RGB(200,  30,  70, "[FATAL]"  );
         return kFatal;
       default:
         throw std::logic_error("Unknown log level...");
@@ -85,6 +85,28 @@ namespace {
   } _;
 
 } // namespace
+
+void Log(Level level, const std::string& message) {
+  switch (level) {
+    case Level::kDebug:
+      Debug(message);
+      break;
+    case Level::kInfo:
+      Info(message);
+      break;
+    case Level::kWarning:
+      Warn(message);
+      break;
+    case Level::kError:
+      Error(message);
+      break;
+    case Level::kFatal:
+      Fatal(message);
+      break;
+    default:
+      throw std::logic_error("Unknown log level...");
+  }
+}
 
 void Debug(const std::string& message) {
   SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%s", message.c_str());
