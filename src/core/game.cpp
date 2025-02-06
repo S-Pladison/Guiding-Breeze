@@ -1,13 +1,14 @@
 #include "game.hpp"
 
-#include <iostream>
-#include <ostream>
+#include "logger/logger.hpp"
 
 #include "SDL.h"
 
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
+
+namespace gb {
 
 Game::~Game() {
   Exit();
@@ -26,17 +27,17 @@ void Game::Start() {
   }
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0) {
-    std::cout << "Не удалось инициализировать SDL..." << '\n';
+    Logger::Fatal("Не удалось инициализировать SDL...");
     return;
   }
 
   if (game.window_ = SDL_CreateWindow("ImGui + SDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_RESIZABLE); !game.window_) {
-    std::cout << "Не удалось инициализировать окно..." << '\n';
+    Logger::Fatal("Не удалось инициализировать окно...");
     return;
   }
 
   if (game.renderer_ = SDL_CreateRenderer(game.window_, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED); !game.renderer_) {
-    std::cout << "Не удалось инициализировать средство визуализации..." << '\n';
+    Logger::Fatal("Не удалось инициализировать средство визуализации...");
     return;
   }
 
@@ -49,13 +50,13 @@ void Game::Start() {
   io.IniFilename = nullptr;
 
   // Исправление кириллицы
-  io.Fonts->AddFontFromFileTTF("res/fonts/minecraft_seven.ttf", 16.0F, nullptr, io.Fonts->GetGlyphRangesCyrillic());
+  //io.Fonts->AddFontFromFileTTF("res/fonts/minecraft_seven.ttf", 16.0F, nullptr, io.Fonts->GetGlyphRangesCyrillic());
 
   // Инициализация ImGui для SDL2 и SDL_Renderer
   ImGui_ImplSDL2_InitForSDLRenderer(game.window_, game.renderer_);
   ImGui_ImplSDLRenderer2_Init(game.renderer_);
 
-  std::cout << "Инициализация игры прошла успешно!" << '\n';
+  Logger::Info("Инициализация игры прошла успешно!");
 
   game.was_started_ = true;
 }
@@ -103,7 +104,7 @@ void Game::Exit() {
     return;
   }
 
-  std::cout << "Прекращение работы игры..." << '\n';
+  Logger::Info("Завершение работы игры...");
 
   // Очистка
   ImGui_ImplSDLRenderer2_Shutdown();
@@ -121,3 +122,5 @@ Game& Game::GetInstance() {
   static Game instance;
   return instance;
 }
+
+} // namespace gb

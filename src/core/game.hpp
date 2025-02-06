@@ -3,6 +3,8 @@
 
 #include "SDL_render.h"
 
+namespace gb {
+
 class Game final {
 public:
   Game(Game const&) = delete;
@@ -29,5 +31,7 @@ public:
 private:
   static Game& GetInstance();
 };
+
+} // namespace gb
 
 #endif // GUIDING_BREEZE_SRC_CORE_GAME_H
