@@ -8,11 +8,9 @@ public:
   Game(Game const&) = delete;
   Game& operator=(Game const&) = delete;
 
-  [[nodiscard]] static bool IsRunning();
-
-  static void Start();
-  static void Update();
-  static void Exit();
+private:
+  Game() = default;
+  ~Game();
 
 private:
   bool was_started_{false};
@@ -21,9 +19,14 @@ private:
   SDL_Window* window_{nullptr};
   SDL_Renderer* renderer_{nullptr};
 
-  Game() = default;
-  ~Game();
+public:
+  [[nodiscard]] static bool IsRunning();
 
+  static void Start();
+  static void Update();
+  static void Exit();
+
+private:
   static Game& GetInstance();
 };
 
