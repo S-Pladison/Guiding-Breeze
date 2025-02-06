@@ -5,13 +5,14 @@
 
 class Game final {
 public:
-  ~Game();
+  Game(Game const&) = delete;
+  Game& operator=(Game const&) = delete;
 
-  [[nodiscard]] bool IsRunning() const;
+  [[nodiscard]] static bool IsRunning();
 
-  void Start();
-  void Update();
-  void Exit();
+  static void Start();
+  static void Update();
+  static void Exit();
 
 private:
   bool was_started_{false};
@@ -19,6 +20,11 @@ private:
 
   SDL_Window* window_{nullptr};
   SDL_Renderer* renderer_{nullptr};
+
+  Game() = default;
+  ~Game();
+
+  static Game& GetInstance();
 };
 
 #endif // GUIDING_BREEZE_SRC_CORE_GAME_H

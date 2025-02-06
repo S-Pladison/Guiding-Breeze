@@ -1,14 +1,13 @@
 #include "core/game.hpp"
 
 int main(int, char**) {
-  Game game;
-  game.Start();
+  Game::Start();
 
-  while (game.IsRunning()) {
-    game.Update();
+  while (Game::IsRunning()) {
+    Game::Update();
   }
 
-  game.Exit();
+  Game::Exit();
 
   return EXIT_SUCCESS;
 }
