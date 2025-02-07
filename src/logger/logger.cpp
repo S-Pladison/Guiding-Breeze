@@ -19,7 +19,7 @@ namespace gb::Logger {
   *
   * @return std::string Строка с текущим временем в формате "YYYY-MM-DD HH:MM:SS".
   */
-std::string GetFormattedTime() {
+[[nodiscard]] std::string GetFormattedTime() {
   auto now = std::chrono::system_clock::now();
   auto time = std::chrono::system_clock::to_time_t(now);
   auto tm = *std::localtime(&time);
@@ -37,7 +37,7 @@ std::string GetFormattedTime() {
   * @return const std::string& Строка уровня логирования.
   * @throw std::logic_error Если передан неизвестный уровень логирования.
   */
-const std::string& LevelAsColoredString(Level level) {
+[[nodiscard]] const std::string& LevelAsColoredString(Level level) {
   switch (level) {
   case Level::kDebug:
     static const std::string kDebug = STR_COLORED_RGB(30, 200, 145, "[DEBUG]");
@@ -68,7 +68,7 @@ const std::string& LevelAsColoredString(Level level) {
   * @return Level Соответствующий для priority LogLevel.
   * @throw std::logic_error Если priority не соответствует ни одному из значений SDL_LogPriority.
   */
-Level SDLLogPriorityToLogLevel(SDL_LogPriority priority) {
+[[nodiscard]] Level SDLLogPriorityToLogLevel(SDL_LogPriority priority) {
   switch (priority) {
     case SDL_LOG_PRIORITY_DEBUG:
       return Level::kDebug;
