@@ -50,7 +50,7 @@ void Game::Start() {
   io.IniFilename = nullptr;
 
   // Исправление кириллицы
-  //io.Fonts->AddFontFromFileTTF("res/fonts/minecraft_seven.ttf", 16.0F, nullptr, io.Fonts->GetGlyphRangesCyrillic());
+  io.Fonts->AddFontFromFileTTF("res/fonts/minecraft_seven.ttf", 16.0F, nullptr, io.Fonts->GetGlyphRangesCyrillic());
 
   // Инициализация ImGui для SDL2 и SDL_Renderer
   ImGui_ImplSDL2_InitForSDLRenderer(game.window_, game.renderer_);

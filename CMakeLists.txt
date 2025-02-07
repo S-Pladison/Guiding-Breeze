@@ -14,3 +14,6 @@ add_executable(${PROJECT_NAME})
 # Добавляет поддиректории с другими CMakeLists.txt файлами.
 add_subdirectory(lib)
 add_subdirectory(src)
+
+# Копируем ресурсы в директорию сборки.
+file(COPY res DESTINATION ${CMAKE_BINARY_DIR})
