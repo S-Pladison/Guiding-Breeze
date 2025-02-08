@@ -3,8 +3,6 @@
 #include <chrono>
 #include <stdexcept>
 
-#include "SDL_log.h"
-
 // Строка сброса цвета текста в консоли.
 #define STR_RESET_COLOR "\e[0m"
 
