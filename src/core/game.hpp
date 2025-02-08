@@ -26,6 +26,7 @@ public:
 
   static void Start();
   static void Update();
+  static void Render();
   static void Exit();
 
 private:

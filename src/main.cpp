@@ -7,6 +7,7 @@ int main(int, char**) {
 
   while (Game::IsRunning()) {
     Game::Update();
+    Game::Render();
   }
 
   Game::Exit();

@@ -75,6 +75,14 @@ void Game::Update() {
     ImGui_ImplSDL2_ProcessEvent(&event);
     if (event.type == SDL_QUIT) game.should_exit_ = true;
   }
+}
+
+void Game::Render() {
+  auto& game = Game::GetInstance();
+
+  if (!game.was_started_) {
+    return;
+  }
 
   // Начало нового кадра ImGui
   ImGui_ImplSDLRenderer2_NewFrame();
