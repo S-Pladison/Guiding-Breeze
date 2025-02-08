@@ -26,12 +26,14 @@ void Game::Start() {
     return;
   }
 
+  Logger::Info("Подготовка перед запуском игры...");
+
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0) {
     Logger::Fatal("Не удалось инициализировать SDL...");
     return;
   }
 
-  if (game.window_ = SDL_CreateWindow("ImGui + SDL2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_RESIZABLE); !game.window_) {
+  if (game.window_ = SDL_CreateWindow("Guiding Breeze", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_RESIZABLE); !game.window_) {
     Logger::Fatal("Не удалось инициализировать окно...");
     return;
   }
@@ -56,7 +58,7 @@ void Game::Start() {
   ImGui_ImplSDL2_InitForSDLRenderer(game.window_, game.renderer_);
   ImGui_ImplSDLRenderer2_Init(game.renderer_);
 
-  Logger::Info("Инициализация игры прошла успешно!");
+  Logger::Info("Подготовка перед запуском игры завершена!");
 
   game.was_started_ = true;
 }
@@ -82,14 +84,22 @@ void Game::Update() {
   // Создание ImGui интерфейса
   ImGui::Begin("Hello, world!");
   ImGui::Text("Это пример использования ImGui с SDL2.");
-  if (ImGui::Button("Закрыть")) game.should_exit_ = true;
   ImGui::End();
 
-  // Отрисовка
-  ImGui::Render();
+  // Чистка экрана
   SDL_SetRenderDrawColor(game.renderer_, 0, 0, 0, 255);
   SDL_RenderClear(game.renderer_);
+
+  // Отрисовка квадрата
+  SDL_Rect rect{50, 50, 100, 100};
+  SDL_SetRenderDrawColor( game.renderer_, 255, 0, 0, 0);
+  SDL_RenderFillRect( game.renderer_, &rect );
+
+  // Отрисовка ImGui
+  ImGui::Render();
   ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), game.renderer_);
+
+  // Update the window now with the content of the display
   SDL_RenderPresent(game.renderer_);
 
   if (game.should_exit_) {
