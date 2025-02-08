@@ -3,11 +3,11 @@
 
 #include <stdexcept>
 #include <string>
-#include <sys/types.h>
 
 #include "SDL_log.h"
 #include "fmt/base.h"
 #include "fmt/format.h"
+#include "sys/types.h"
 
 namespace gb::Logger {
 
