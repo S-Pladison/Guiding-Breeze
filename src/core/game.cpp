@@ -3,6 +3,9 @@
 #include "core/screen.hpp"
 #include "logger/logger.hpp"
 
+#include <algorithm>
+#include <string>
+
 #include "SDL_video.h"
 #include "fmt/format.h"
 #include "imgui.h"
@@ -31,6 +34,7 @@ void OnStart(SDL_Window* window, SDL_Renderer* renderer) {
   gb::renderer = renderer;
 
   Logger::Info("Запуск игры...");
+  Screen::SetResolution(1280, 720, Screen::DisplayMode::Windowed);
 }
 
 void Update() {
@@ -38,34 +42,45 @@ void Update() {
 }
 
 void Render() {
-  // Создание ImGui интерфейса
-  ImGui::Begin("Hello, world!");
+  ImGui::Begin("Настройки", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
   
-  // Отрисовываем Combo для вариантов доступных разрешений экрана
-  const auto& resolution = Screen::GetAvailableResolutions();
-  static int selected_index = 0;
-  if (ImGui::BeginCombo("Resolution", fmt::format("{}x{} {}hz", resolution[selected_index].width, resolution[selected_index].height, resolution[selected_index].refresh_rate).c_str())) {
-    for (int i = 0; i < resolution.size(); ++i) {
-      const auto& res = resolution[i];
-      bool selected = (selected_index == i);
-      if (ImGui::Selectable(fmt::format("{}x{} {}hz", res.width, res.height, res.refresh_rate).c_str(), &selected)) {
-        selected_index = i;
+  ImGui::SeparatorText("Графика");
+
+  // Получение данных о разрешениях
+  const auto& resolutions = Screen::GetAvailableResolutions();
+  const auto& active_resolution = Screen::GetResolution();
+  static int selected_resolution_index = std::find_if(resolutions.begin(), resolutions.end(), [active_resolution](const auto& r) {
+    return r.width == active_resolution.width && r.height == active_resolution.height && r.refresh_rate == active_resolution.refresh_rate;
+  }) - resolutions.begin();
+
+  // Отрисовка всплывающего списка для выбора разрешения
+  if (ImGui::BeginCombo("Разрешение", fmt::format("{}x{} {}hz", resolutions[selected_resolution_index].width, resolutions[selected_resolution_index].height, resolutions[selected_resolution_index].refresh_rate).c_str())) {
+    for (size_t i = 0; i < resolutions.size(); i++) {
+      const auto& resolution = resolutions[i];
+      auto selected = (selected_resolution_index == i);
+
+      if (ImGui::Selectable(fmt::format("{}x{} {}hz", resolution.width, resolution.height, resolution.refresh_rate).c_str(), &selected)) {
+        selected_resolution_index = i;
       }
     }
     ImGui::EndCombo();
   }
 
-  // Создаем Combo для enum Screen::DisplayMode
-  static Screen::DisplayMode mode = Screen::DisplayMode::Windowed;
-  const char* items[] = {"Windowed", "Borderless", "Fullscreen"};
+  // Отрисовка всплывающего списка выбора режима экрана
+  static auto mode = Screen::DisplayMode::Windowed;
+  static const char* modes[] = {"Windowed", "Borderless", "Fullscreen"};
   int item_current = static_cast<int>(mode);
-  ImGui::Combo("Display Mode", &item_current, items, IM_ARRAYSIZE(items));
-  mode = static_cast<Screen::DisplayMode>(item_current);
+  if (ImGui::Combo("Режим", &item_current, modes, IM_ARRAYSIZE(modes))) {
+    mode = static_cast<Screen::DisplayMode>(item_current);
+  }
+
+  ImGui::Separator();
 
   // Кнопчка
-  if (ImGui::Button("Resize Window")) {
-    Screen::SetResolution(resolution[selected_index], static_cast<Screen::DisplayMode>(mode));
+  if (ImGui::Button("Применить")) {
+    Screen::SetResolution(resolutions[selected_resolution_index], mode);
   }
+
   ImGui::End();
 
   // Отрисовка квадрата
