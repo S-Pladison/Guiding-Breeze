@@ -54,11 +54,11 @@ void SetResolution(size_t width, size_t height, DisplayMode mode) {
       break;
     case DisplayMode::Windowed:
     default:
-        {
-          SDL_SetWindowFullscreen(window, 0);
-          SDL_SetWindowBordered(window, SDL_TRUE);
-          SDL_SetWindowSize(window, final_mode.w, final_mode.h);
-        }
+      {
+        SDL_SetWindowFullscreen(window, 0);
+        SDL_SetWindowBordered(window, SDL_TRUE);
+        SDL_SetWindowSize(window, final_mode.w, final_mode.h);
+      }
       break;
   }
 
