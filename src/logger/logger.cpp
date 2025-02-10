@@ -37,19 +37,19 @@ namespace gb::Logger {
   */
 [[nodiscard]] const std::string& LevelAsColoredString(Level level) {
   switch (level) {
-  case Level::kDebug:
+  case Level::Debug:
     static const std::string kDebug = STR_COLORED_RGB(30, 200, 145, "[DEBUG]");
     return kDebug;
-  case Level::kInfo:
+  case Level::Info:
     static const std::string kInfo = STR_COLORED_RGB(130, 130, 130, "[INFO]");
     return kInfo;
-  case Level::kWarning:
+  case Level::Warning:
     static const std::string kWarning = STR_COLORED_RGB(200, 145, 30, "[WARNING]");
     return kWarning;
-  case Level::kError:
+  case Level::Error:
     static const std::string kError = STR_COLORED_RGB(200, 30, 70, "[ERROR]");
     return kError;
-  case Level::kFatal:
+  case Level::Fatal:
     static const std::string kFatal = STR_COLORED_RGB(200, 30, 70, "[FATAL]");
     return kFatal;
   default:
@@ -69,15 +69,15 @@ namespace gb::Logger {
 [[nodiscard]] Level SDLLogPriorityToLogLevel(SDL_LogPriority priority) {
   switch (priority) {
     case SDL_LOG_PRIORITY_DEBUG:
-      return Level::kDebug;
+      return Level::Debug;
     case SDL_LOG_PRIORITY_INFO:
-      return Level::kInfo;
+      return Level::Info;
     case SDL_LOG_PRIORITY_WARN:
-      return Level::kWarning;
+      return Level::Warning;
     case SDL_LOG_PRIORITY_ERROR:
-      return Level::kError;
+      return Level::Error;
     case SDL_LOG_PRIORITY_CRITICAL:
-      return Level::kFatal;
+      return Level::Fatal;
     default:
       throw std::logic_error(
         fmt::format("Недопустимый приоритет загрузки: {}", static_cast<int>(priority))

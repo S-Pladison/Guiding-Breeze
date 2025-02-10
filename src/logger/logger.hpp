@@ -15,11 +15,11 @@ namespace gb::Logger {
  * @brief Перечисление уровней логирования.
  */
 enum class Level : u_short {
-  kDebug,   //< Отладочная информация, не влияющие на работу программы
-  kInfo,    //< Сообщения, не влияющие на работу программы
-  kWarning, //< Предупреждения, которые могут привести к непредвиденному поведению
-  kError,   //< Ошибки, которые могут привести к непредвиденному поведению
-  kFatal    //< Критические ошибки, прерывающие выполнение программы
+  Debug,   //< Отладочная информация, не влияющие на работу программы
+  Info,    //< Сообщения, не влияющие на работу программы
+  Warning, //< Предупреждения, которые могут привести к непредвиденному поведению
+  Error,   //< Ошибки, которые могут привести к непредвиденному поведению
+  Fatal    //< Критические ошибки, прерывающие выполнение программы
 };
 
 /**
@@ -34,19 +34,19 @@ template<Level Level, typename... Args>
 void Log(const std::string& fmt, Args&&... args) {
   auto msg = fmt::format(fmt::runtime(fmt), args...);
 
-  if constexpr (Level == Level::kDebug) {
+  if constexpr (Level == Level::Debug) {
     SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%s", msg.c_str());
   }
-  else if constexpr (Level == Level::kInfo) {
+  else if constexpr (Level == Level::Info) {
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "%s", msg.c_str());
   }
-  else if constexpr (Level == Level::kWarning) {
+  else if constexpr (Level == Level::Warning) {
     SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "%s", msg.c_str());
   }
-  else if constexpr (Level == Level::kError) {
+  else if constexpr (Level == Level::Error) {
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", msg.c_str());
   }
-  else if constexpr (Level == Level::kFatal) {
+  else if constexpr (Level == Level::Fatal) {
     SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "%s", msg.c_str());
   }
   else {
@@ -64,7 +64,7 @@ void Log(const std::string& fmt, Args&&... args) {
  */
 template<typename... Args>
 inline void Debug(const std::string& fmt, Args&&... args) {
-  Log<Level::kDebug>(fmt, args...);
+  Log<Level::Debug>(fmt, args...);
 }
 
 /**
@@ -75,7 +75,7 @@ inline void Debug(const std::string& fmt, Args&&... args) {
  */
 template<typename... Args>
 inline void Info(const std::string& fmt, Args&&... args) {
-  Log<Level::kInfo>(fmt, args...);
+  Log<Level::Info>(fmt, args...);
 }
 
 /**
@@ -86,7 +86,7 @@ inline void Info(const std::string& fmt, Args&&... args) {
  */
 template<typename... Args>
 inline void Warn(const std::string& fmt, Args&&... args) {
-  Log<Level::kWarning>(fmt, args...);
+  Log<Level::Warning>(fmt, args...);
 }
 
 /**
@@ -97,7 +97,7 @@ inline void Warn(const std::string& fmt, Args&&... args) {
  */
 template<typename... Args>
 inline void Error(const std::string& fmt, Args&&... args) {
-  Log<Level::kError>(fmt, args...);
+  Log<Level::Error>(fmt, args...);
 }
 
 /**
@@ -108,7 +108,7 @@ inline void Error(const std::string& fmt, Args&&... args) {
  */
 template<typename... Args>
 inline void Fatal(const std::string& fmt, Args&&... args) {
-  Log<Level::kFatal>(fmt, args...);
+  Log<Level::Fatal>(fmt, args...);
 }
 
 } // namespace gb::Logger
