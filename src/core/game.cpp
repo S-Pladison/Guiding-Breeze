@@ -102,9 +102,9 @@ void Game::Render() {
   ImGui::Begin("Hello, world!");
   
   const auto& resolution = Screen::GetAvailableResolutions();
-  static int selected_index = -1;
+  static int selected_index = 0;
 
-  if (ImGui::BeginCombo("Resolution", resolution.empty() ? "None" : fmt::format("{}x{} {}hz", resolution[selected_index].width, resolution[selected_index].height, resolution[selected_index].refresh_rate).c_str())) {
+  if (ImGui::BeginCombo("Resolution", fmt::format("{}x{} {}hz", resolution[selected_index].width, resolution[selected_index].height, resolution[selected_index].refresh_rate).c_str())) {
     for (int i = 0; i < resolution.size(); ++i) {
       const auto& res = resolution[i];
       bool selected = (selected_index == i);
@@ -125,7 +125,7 @@ void Game::Render() {
   
 
   if (ImGui::Button("Resize Window")) {
-    Screen::SetResolution(resolution[selected_index].width, resolution[selected_index].height, static_cast<Screen::DisplayMode>(mode));
+    Screen::SetResolution(resolution[selected_index], static_cast<Screen::DisplayMode>(mode));
   }
   ImGui::End();
 
