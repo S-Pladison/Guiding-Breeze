@@ -37,12 +37,28 @@ const Resolution& GetResolution();
 /**
  * @brief Изменяет разрешение экрана.
  * 
- * @param width Ширина разрешения экрана.
- * @param height Высота разрешения экрана.
+ * @param requested_resolution Запрашиваемое разрешение экрана.
  * @param mode Режим отображения.
  * @note Если соответствующее разрешение не поддерживается, используется ближайшее.
  */
-void SetResolution(size_t width, size_t height, DisplayMode mode);
+void SetResolution(const Resolution& requested_resolution, DisplayMode mode);
+
+/**
+ * @brief Изменяет разрешение экрана.
+ * 
+ * @param width Запрашиваемая ширина разрешения экрана.
+ * @param height Запрашиваемая высота разрешения экрана.
+ * @param mode Режим отображения.
+ * @note Если соответствующее разрешение не поддерживается, используется ближайшее.
+ */
+inline void SetResolution(size_t width, size_t height, DisplayMode mode) {
+  Resolution resolution;
+  resolution.width = width;
+  resolution.height = height;
+  resolution.refresh_rate = 0;
+
+  return SetResolution(resolution, mode);
+}
 
 /**
  * @brief Получить информацию обо всех доступных разрешениях экрана.

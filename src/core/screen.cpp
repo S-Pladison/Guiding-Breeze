@@ -19,21 +19,24 @@ const Resolution& GetResolution() {
   return resolution;
 }
 
-void SetResolution(size_t width, size_t height, DisplayMode mode) {
+void SetResolution(const Resolution& requested_resolution, DisplayMode mode) {
   auto* window = Game::GetWindow();
   auto display_index = SDL_GetWindowDisplayIndex(window);
 
   SDL_DisplayMode requested_mode;
   requested_mode.format = 0;
-  requested_mode.w = width;
-  requested_mode.h = height;
-  requested_mode.refresh_rate = 0;
+  requested_mode.w = requested_resolution.width;
+  requested_mode.h = requested_resolution.height;
+  requested_mode.refresh_rate = requested_resolution.refresh_rate;
   requested_mode.driverdata = nullptr;
 
   SDL_DisplayMode final_mode;
 
   if (!SDL_GetClosestDisplayMode(display_index, &requested_mode, &final_mode)) {
-    Logger::Error("Не удалось найти ближайшее разрешение под [W:{} H:{} M:{}]...", width, height, static_cast<int>(mode));
+    Logger::Error(
+      "Не удалось найти ближайшее разрешение под [W:{} H:{} Hz:{} M:{}]...",
+      requested_resolution.width, requested_resolution.height, requested_resolution.refresh_rate, static_cast<int>(mode)
+    );
     return;
   }
 
@@ -66,7 +69,10 @@ void SetResolution(size_t width, size_t height, DisplayMode mode) {
   resolution.height = final_mode.h;
   resolution.refresh_rate = final_mode.refresh_rate;
 
-  Logger::Info("Разрешение экрана изменено на [W:{} H:{} M:{}].", width, height, static_cast<int>(mode));
+  Logger::Info(
+    "Разрешение экрана изменено на [W:{} H:{} Hz:{} M:{}].",
+    resolution.width, resolution.height, resolution.refresh_rate, static_cast<int>(mode)
+  );
 }
 
 const std::vector<Resolution>& GetAvailableResolutions() {
