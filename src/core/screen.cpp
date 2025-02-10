@@ -10,10 +10,10 @@ namespace gb::Screen {
 
 namespace {
 
-Resolution resolution;
-std::vector<Resolution> available_resolutions;
+  Resolution resolution; //< Текущее разрешение экрана
+  std::vector<Resolution> available_resolutions; //< Коллекция доступных разрешений экрана
 
-}
+  } // namespace
 
 const Resolution& GetResolution() {
   return resolution;

@@ -13,18 +13,18 @@ namespace gb::Screen {
  */
 struct Resolution {
 public:
-  size_t width;        //< Ширина экрана в пикселях.
-  size_t height;       //< Высота экрана в пикселях.
-  size_t refresh_rate; //< Частота обновления (Гц).
+  size_t width;        //< Ширина экрана в пикселях
+  size_t height;       //< Высота экрана в пикселях
+  size_t refresh_rate; //< Частота обновления (Гц)
 };
 
 /**
  * @brief Режим отображения.
  */
 enum class DisplayMode : u_short {
-  Windowed,   //< Оконный режим.
-  Borderless, //< Оконный режим без границ.
-  Fullscreen  //< Полноэкранный режим.
+  Windowed,   //< Оконный режим
+  Borderless, //< Оконный режим без границ
+  Fullscreen  //< Полноэкранный режим
 };
 
 /**
