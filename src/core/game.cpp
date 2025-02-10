@@ -45,12 +45,12 @@ void Game::Start() {
     return;
   }
 
-  SDL_GetWindowSize(game.window_, &game.screen_size_.x, &game.screen_size_.y);
-
   if (game.renderer_ = SDL_CreateRenderer(game.window_, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED); !game.renderer_) {
     Logger::Fatal("Не удалось инициализировать средство визуализации...");
     return;
   }
+
+  Screen::SetResolution(1920, 1080, Screen::DisplayMode::Windowed);
 
   // Инициализация ImGui
   IMGUI_CHECKVERSION();

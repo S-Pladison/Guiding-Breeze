@@ -2,10 +2,9 @@
 #define GUIDING_BREEZE_SRC_CORE_SCREEN_H
 
 #include <glm/ext/vector_int2.hpp>
-
 #include <sys/types.h>
+
 #include <vector>
-#include "SDL_video.h"
 
 namespace gb::Screen {
 

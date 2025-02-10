@@ -1,9 +1,10 @@
 #include "screen.hpp"
-#include <vector>
+
+#include "game.hpp"
+#include "logger/logger.hpp"
+
 #include "SDL_stdinc.h"
 #include "SDL_video.h"
-#include "core/game.hpp"
-#include "logger/logger.hpp"
 
 namespace gb::Screen {
 
@@ -70,19 +71,21 @@ void SetResolution(size_t width, size_t height, DisplayMode mode) {
 
 const std::vector<Resolution>& GetAvailableResolutions() {
   if (available_resolutions.empty()) {
-    int display_index = SDL_GetWindowDisplayIndex(Game::GetWindow());
-    int num_modes = SDL_GetNumDisplayModes(display_index);
+    auto display_index = SDL_GetWindowDisplayIndex(Game::GetWindow());
+    auto num_modes = SDL_GetNumDisplayModes(display_index);
     
-    for (int i = 0; i < num_modes; ++i) {
+    for (auto i = size_t{0}; i < num_modes; i++) {
       SDL_DisplayMode mode;
+
       if (!SDL_GetDisplayMode(display_index, i, &mode)) {
-        available_resolutions.push_back(
-          {static_cast<size_t>(mode.w), static_cast<size_t>(mode.h), static_cast<size_t>(mode.refresh_rate)}
-        );
+        auto& resolution = available_resolutions.emplace_back();
+        resolution.width = mode.w;
+        resolution.height = mode.h;
+        resolution.refresh_rate = mode.refresh_rate;
       }
     }
   }
-  return available_resolutions; 
+  return available_resolutions;
 }
 
 } // namespace gb::Screen
