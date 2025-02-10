@@ -21,7 +21,7 @@ const Resolution& GetResolution() {
 
 void SetResolution(size_t width, size_t height, DisplayMode mode) {
   auto* window = Game::GetWindow();
-  auto display_index = SDL_GetWindowDisplayIndex(Game::GetWindow());
+  auto display_index = SDL_GetWindowDisplayIndex(window);
 
   SDL_DisplayMode requested_mode;
   requested_mode.format = 0;
