@@ -1,109 +1,49 @@
 #include "game.hpp"
 
-#include "SDL_video.h"
 #include "core/screen.hpp"
-#include "fmt/format.h"
 #include "logger/logger.hpp"
 
-#include "SDL.h"
-
+#include "SDL_video.h"
+#include "fmt/format.h"
 #include "imgui.h"
-#include "imgui_impl_sdl2.h"
-#include "imgui_impl_sdlrenderer2.h"
 
 namespace gb {
 
-Game::~Game() {
-  Exit();
+namespace {
+
+  SDL_Window* window{nullptr}; //< Указатель на окно игры
+  SDL_Renderer* renderer{nullptr}; //< Указатель на отрисовщик игры
+
+  bool should_exit; //< Флаг, указывающий на то, нужно ли прекратить игру после завершения текущего цикла
+
+} // namespace
+
+bool IsExitRequested() {
+  return should_exit;
 }
 
-SDL_Window* Game::GetWindow() {
-  return Game::GetInstance().window_;
+void RequestExit() {
+  should_exit = true;
 }
 
-bool Game::IsRunning() {
-  auto& game = Game::GetInstance();
-  return game.was_started_;
+void OnStart(SDL_Window* window, SDL_Renderer* renderer) {
+  gb::window = window;
+  gb::renderer = renderer;
+
+  Logger::Info("Запуск игры...");
 }
 
-void Game::Start() {
-  auto& game = Game::GetInstance();
-
-  if (game.was_started_) {
-    return;
-  }
-
-  Logger::Info("Подготовка перед запуском игры...");
-
-  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0) {
-    Logger::Fatal("Не удалось инициализировать SDL...");
-    return;
-  }
-
-  if (game.window_ = SDL_CreateWindow("Guiding Breeze", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_RESIZABLE); !game.window_) {
-    Logger::Fatal("Не удалось инициализировать окно...");
-    return;
-  }
-
-  if (game.renderer_ = SDL_CreateRenderer(game.window_, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED); !game.renderer_) {
-    Logger::Fatal("Не удалось инициализировать средство визуализации...");
-    return;
-  }
-
-  Screen::SetResolution(1920, 1080, Screen::DisplayMode::Windowed);
-
-  // Инициализация ImGui
-  IMGUI_CHECKVERSION();
-  ImGui::CreateContext();
-  ImGuiIO& io = ImGui::GetIO();
-
-  // Временно убираем сохранения данных ImGui
-  io.IniFilename = nullptr;
-
-  // Исправление кириллицы
-  io.Fonts->AddFontFromFileTTF("res/fonts/minecraft_seven.ttf", 16.0F, nullptr, io.Fonts->GetGlyphRangesCyrillic());
-
-  // Инициализация ImGui для SDL2 и SDL_Renderer
-  ImGui_ImplSDL2_InitForSDLRenderer(game.window_, game.renderer_);
-  ImGui_ImplSDLRenderer2_Init(game.renderer_);
-
-  Logger::Info("Подготовка перед запуском игры завершена!");
-
-  game.was_started_ = true;
+void Update() {
+  // ...
 }
 
-void Game::Update() {
-  auto& game = Game::GetInstance();
-
-  if (!game.was_started_) {
-    return;
-  }
-
-  SDL_Event event;
-  while (SDL_PollEvent(&event)) {
-    ImGui_ImplSDL2_ProcessEvent(&event);
-    if (event.type == SDL_QUIT) game.should_exit_ = true;
-  }
-}
-
-void Game::Render() {
-  auto& game = Game::GetInstance();
-
-  if (!game.was_started_) {
-    return;
-  }
-
-  // Начало нового кадра ImGui
-  ImGui_ImplSDLRenderer2_NewFrame();
-  ImGui_ImplSDL2_NewFrame();
-  ImGui::NewFrame();
-
+void Render() {
   // Создание ImGui интерфейса
   ImGui::Begin("Hello, world!");
   
+  // Отрисовываем Combo для вариантов доступных разрешений экрана
   const auto& resolution = Screen::GetAvailableResolutions();
   static int selected_index = 0;
-
   if (ImGui::BeginCombo("Resolution", fmt::format("{}x{} {}hz", resolution[selected_index].width, resolution[selected_index].height, resolution[selected_index].refresh_rate).c_str())) {
     for (int i = 0; i < resolution.size(); ++i) {
       const auto& res = resolution[i];
@@ -115,65 +55,46 @@ void Game::Render() {
     ImGui::EndCombo();
   }
 
-
   // Создаем Combo для enum Screen::DisplayMode
   static Screen::DisplayMode mode = Screen::DisplayMode::Windowed;
   const char* items[] = {"Windowed", "Borderless", "Fullscreen"};
   int item_current = static_cast<int>(mode);
   ImGui::Combo("Display Mode", &item_current, items, IM_ARRAYSIZE(items));
   mode = static_cast<Screen::DisplayMode>(item_current);
-  
 
+  // Кнопчка
   if (ImGui::Button("Resize Window")) {
     Screen::SetResolution(resolution[selected_index], static_cast<Screen::DisplayMode>(mode));
   }
   ImGui::End();
 
-  // Чистка экрана
-  SDL_SetRenderDrawColor(game.renderer_, 0, 0, 0, 255);
-  SDL_RenderClear(game.renderer_);
-
   // Отрисовка квадрата
   SDL_Rect rect{50, 50, 100, 100};
-  SDL_SetRenderDrawColor( game.renderer_, 255, 0, 0, 0);
-  SDL_RenderFillRect( game.renderer_, &rect );
-
-  // Отрисовка ImGui
-  ImGui::Render();
-  ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), game.renderer_);
-
-  // Update the window now with the content of the display
-  SDL_RenderPresent(game.renderer_);
-
-  if (game.should_exit_) {
-    Exit();
-  }
+  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0);
+  SDL_RenderFillRect( renderer, &rect );
 }
 
-void Game::Exit() {
-  auto& game = Game::GetInstance();
+void OnExit() {
+  gb::window = nullptr;
+  gb::renderer = nullptr;
 
-  if (!game.was_started_) {
-    return;
+  Logger::Info("Завершение игры...");
+}
+
+namespace Game {
+
+  SDL_Window* GetWindow() {
+    return window;
   }
 
-  Logger::Info("Завершение работы игры...");
+  SDL_Renderer* GetRenderer() {
+    return renderer;
+  }
 
-  // Очистка
-  ImGui_ImplSDLRenderer2_Shutdown();
-  ImGui_ImplSDL2_Shutdown();
-  ImGui::DestroyContext();
+  void Stop() {
+    RequestExit();
+  }
 
-  SDL_DestroyRenderer(game.renderer_);
-  SDL_DestroyWindow(game.window_);
-  SDL_Quit();
-
-  game.was_started_ = false;
-}
-
-Game& Game::GetInstance() {
-  static Game instance;
-  return instance;
-}
+} // namespace Game
 
 } // namespace gb
