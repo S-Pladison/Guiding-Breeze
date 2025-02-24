@@ -1,12 +1,17 @@
 #include "game.hpp"
 
+#include "core/components/test_component.hpp"
 #include "core/screen.hpp"
+#include "core/systems/system.hpp"
+#include "core/systems/test_system.hpp"
 #include "logger/logger.hpp"
 
 #include <algorithm>
+#include <memory>
 #include <string>
 
 #include "SDL_video.h"
+#include "entt/entt.hpp"
 #include "fmt/format.h"
 #include "imgui.h"
 
@@ -16,7 +21,8 @@ namespace {
 
   SDL_Window* window{nullptr}; //< Указатель на окно игры
   SDL_Renderer* renderer{nullptr}; //< Указатель на отрисовщик игры
-
+  std::unique_ptr<entt::registry> registry; //< Реестр сущностей
+  std::vector<std::unique_ptr<System>> systems; //< Вектор систем, взаимодействующих с реестром сущностей
   bool should_exit; //< Флаг, указывающий на то, нужно ли прекратить игру после завершения текущего цикла
 
 } // namespace
@@ -35,10 +41,18 @@ void OnStart(SDL_Window* window, SDL_Renderer* renderer) {
 
   Logger::Info("Запуск игры...");
   Screen::SetResolution(1280, 720, 0, Screen::DisplayMode::Windowed);
+
+  registry = std::make_unique<entt::registry>();
+  systems.emplace_back(std::make_unique<TestSystem>(registry.get()));
+
+  auto entity = registry->create();
+  registry->emplace<TestComponent>(entity, 0);
 }
 
 void Update() {
-  // ...
+  for (auto& system : systems) {
+    system->Update();
+  }
 }
 
 void Render() {
@@ -90,6 +104,9 @@ void Render() {
 }
 
 void OnExit() {
+  systems.clear();
+  registry.reset();
+
   gb::window = nullptr;
   gb::renderer = nullptr;
 

@@ -1,3 +1,7 @@
+# -[entt]--------------------------------------------------------------------
+
+add_subdirectory(entt)
+
 # -[fmt]--------------------------------------------------------------------
 
 add_subdirectory(fmt)
@@ -34,6 +38,7 @@ target_link_libraries(imgui
 )
 
 target_link_libraries(${PROJECT_NAME}
+    EnTT
     fmt
     SDL2::SDL2
     SDL2::SDL2main

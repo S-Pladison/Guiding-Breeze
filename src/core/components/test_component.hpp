@@ -1,0 +1,12 @@
+#ifndef GUIDING_BREEZE_SRC_CORE_SYSTEMS_TEST_COMPONENT_H
+#define GUIDING_BREEZE_SRC_CORE_SYSTEMS_TEST_COMPONENT_H
+
+namespace gb {
+
+struct TestComponent {
+  int value;
+};
+
+} // namespace gb
+
+#endif // GUIDING_BREEZE_SRC_CORE_SYSTEMS_TEST_COMPONENT_H
