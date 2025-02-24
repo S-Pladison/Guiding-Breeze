@@ -23,7 +23,7 @@ namespace gb::Logger {
   auto tm = *std::localtime(&time);
 
   std::ostringstream oss;
-  oss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
+  oss << std::put_time(&tm, "%H:%M:%S");
 
   return oss.str();
 }

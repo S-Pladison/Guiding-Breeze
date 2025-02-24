@@ -34,7 +34,7 @@ void OnStart(SDL_Window* window, SDL_Renderer* renderer) {
   gb::renderer = renderer;
 
   Logger::Info("Запуск игры...");
-  Screen::SetResolution(1280, 720, Screen::DisplayMode::Windowed);
+  Screen::SetResolution(1280, 720, 0, Screen::DisplayMode::Windowed);
 }
 
 void Update() {

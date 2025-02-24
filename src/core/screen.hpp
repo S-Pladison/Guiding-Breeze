@@ -48,14 +48,15 @@ void SetResolution(const Resolution& requested_resolution, DisplayMode mode);
  * 
  * @param width Запрашиваемая ширина разрешения экрана.
  * @param height Запрашиваемая высота разрешения экрана.
+ * @param refresh_rate Запрашиваемая частота обновления экрана.
  * @param mode Режим отображения.
  * @note Если соответствующее разрешение не поддерживается, используется ближайшее.
  */
-inline void SetResolution(size_t width, size_t height, DisplayMode mode) {
+inline void SetResolution(size_t width, size_t height, size_t refresh_rate, DisplayMode mode) {
   Resolution resolution;
   resolution.width = width;
   resolution.height = height;
-  resolution.refresh_rate = 0;
+  resolution.refresh_rate = refresh_rate;
 
   return SetResolution(resolution, mode);
 }
