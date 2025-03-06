@@ -15,8 +15,7 @@ extern bool IsExitRequested(); //< Функция проверки запрос�
 extern void RequestExit(); //< Функция запроса на завершения игры
 
 extern void OnStart(SDL_Window* window, SDL_Renderer* renderer); //< Функция начала игры; Вызывается лишь раз при удачном запуске программы
-extern void Update(); //< Зацикленная функция обновления логики игры
-extern void Render(); //< Зацикленная функция отрисовки игры
+extern void Update(); //< Функция обновления игры
 extern void OnExit(); //< Функция завершения игры; Вызывается лишь раз перед выходом из программы
 
 } // namespace gb
@@ -77,9 +76,6 @@ int main(int, char**) {
       }
     }
 
-    // Обновление логики игры
-    gb::Update();
-
     // Начало кадра отрисовки
     ImGui_ImplSDLRenderer2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
@@ -88,7 +84,7 @@ int main(int, char**) {
     SDL_RenderClear(renderer);
 
     // Отрисовка кадра
-    gb::Render();
+    gb::Update();
     ImGui::Render();
     ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), renderer);
     SDL_RenderPresent(renderer);

@@ -8,7 +8,7 @@ namespace gb {
 class System {
 public:
   System() = default;
-  virtual ~System() noexcept = default;
+  virtual ~System() = default;
 
 public:
   System& operator=(System&&) = delete;

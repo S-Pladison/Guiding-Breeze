@@ -29,18 +29,21 @@ target_include_directories(imgui PUBLIC
 # -[SDL2]-------------------------------------------------------------------
 
 add_subdirectory(sdl2)
+add_subdirectory(sdl2-image)
 
 # -[Линковка]---------------------------------------------------------------
 
 target_link_libraries(imgui
-    SDL2::SDL2
-    SDL2::SDL2main
+    SDL2
+    SDL2main
+    SDL2_image
 )
 
 target_link_libraries(${PROJECT_NAME}
     EnTT
     fmt
-    SDL2::SDL2
-    SDL2::SDL2main
     imgui
+    SDL2
+    SDL2main
+    SDL2_image
 )

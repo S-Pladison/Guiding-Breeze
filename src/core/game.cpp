@@ -50,12 +50,6 @@ void OnStart(SDL_Window* window, SDL_Renderer* renderer) {
 }
 
 void Update() {
-  for (auto& system : systems) {
-    system->Update(*registry);
-  }
-}
-
-void Render() {
   ImGui::Begin("Настройки", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
   
   ImGui::SeparatorText("Графика");
@@ -97,10 +91,10 @@ void Render() {
 
   ImGui::End();
 
-  // Отрисовка квадрата
-  SDL_Rect rect{50, 50, 100, 100};
-  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0);
-  SDL_RenderFillRect( renderer, &rect );
+  // Обновление систем
+  for (auto& system : systems) {
+    system->Update(*registry);
+  }
 }
 
 void OnExit() {
