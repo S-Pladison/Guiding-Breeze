@@ -1,9 +1,9 @@
 #include "game.hpp"
 
-#include "core/components/test_component.hpp"
+#include "core/ecs/components/test_component.hpp"
+#include "core/ecs/systems/render_system.hpp"
+#include "core/ecs/systems/system.hpp"
 #include "core/screen.hpp"
-#include "core/systems/system.hpp"
-#include "core/systems/test_system.hpp"
 #include "logger/logger.hpp"
 
 #include <algorithm>
@@ -43,7 +43,7 @@ void OnStart(SDL_Window* window, SDL_Renderer* renderer) {
   Screen::SetResolution(1280, 720, 0, Screen::DisplayMode::Windowed);
 
   registry = std::make_unique<entt::registry>();
-  systems.emplace_back(std::make_unique<TestSystem>(registry.get()));
+  systems.emplace_back(std::make_unique<RenderSystem>());
 
   auto entity = registry->create();
   registry->emplace<TestComponent>(entity, 0);
@@ -51,7 +51,7 @@ void OnStart(SDL_Window* window, SDL_Renderer* renderer) {
 
 void Update() {
   for (auto& system : systems) {
-    system->Update();
+    system->Update(*registry);
   }
 }
 
